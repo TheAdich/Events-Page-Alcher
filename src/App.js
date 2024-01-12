@@ -22,7 +22,7 @@ const marks = [
       z: 0,
     },
     buttonAt: {
-      x: -15,
+      x: 0,
       y: 2,
       z: 0,
     },
@@ -41,7 +41,7 @@ const marks = [
       z: 15,
     },
     buttonAt: {
-      x: -15,
+      x: 0,
       y: 2,
       z: 15,
     },
@@ -60,7 +60,7 @@ const marks = [
       z: 30,
     },
     buttonAt: {
-      x: -8,
+      x: 0,
       y: 2,
       z: 30,
     },
@@ -146,8 +146,8 @@ function Annotations({ controls }) {
           new TWEEN.Tween(controls.current.target)
             .to(
               {
-                x: now.data.lookAt.x,
-                y: now.data.lookAt.y,
+                // x: now.data.lookAt.x,
+                // y: now.data.lookAt.y,
                 z: now.data.lookAt.z,
               },
               4000
@@ -159,8 +159,8 @@ function Annotations({ controls }) {
           new TWEEN.Tween(camera.position)
             .to(
               {
-                x: now.data.camPos.x,
-                y: now.data.camPos.y,
+                // x: now.data.camPos.x,
+                // y: now.data.camPos.y,
                 z: now.data.camPos.z,
               },
               4000
