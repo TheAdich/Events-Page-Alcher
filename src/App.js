@@ -1,7 +1,13 @@
 import "./App.css";
 import React, { useRef, useState, useEffect, Suspense } from "react";
 import { Canvas, useFrame, useLoader, useThree } from "@react-three/fiber";
-import { OrbitControls, Stats, Html, Text } from "@react-three/drei";
+import {
+  OrbitControls,
+  Stats,
+  Html,
+  Text,
+  PerspectiveCamera,
+} from "@react-three/drei";
 import { Museum } from "./gltfFiles/Museum_new";
 import TWEEN from "@tweenjs/tween.js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -123,56 +129,56 @@ marks.forEach((obj) => {
 console.log(list);
 
 //a component creating a button as of now!
-function Annotations({ controls }) {
-  const { camera } = useThree();
-  let now = list.head;
+// function Annotations({ controls }) {
+//   const { camera } = useThree();
+//   let now = list.head;
 
-  const forward = () => {
-    now = now.next;
-  };
+//   const forward = () => {
+//     now = now.next;
+//   };
 
-  useEffect(() => {
-    console.log("rendering...");
-  }, [now]);
+//   useEffect(() => {
+//     console.log("rendering...");
+//   }, [now]);
 
-  return (
-    <Html className="hello" fullscreen>
-      <FontAwesomeIcon
-        className="icon-right"
-        icon={faAnglesRight}
-        onClick={forward}
-        onPointerUp={() => {
-          // change target
-          new TWEEN.Tween(controls.current.target)
-            .to(
-              {
-                // x: now.data.lookAt.x,
-                // y: now.data.lookAt.y,
-                z: now.data.lookAt.z,
-              },
-              4000
-            )
-            .easing(TWEEN.Easing.Cubic.Out)
-            .start();
+//   return (
+//     <Html className="hello" fullscreen>
+//       <FontAwesomeIcon
+//         className="icon-right"
+//         icon={faAnglesRight}
+//         onClick={forward}
+//         onPointerUp={() => {
+//           // change target
+//           new TWEEN.Tween(controls.current.target)
+//             .to(
+//               {
+//                 // x: now.data.lookAt.x,
+//                 // y: now.data.lookAt.y,
+//                 z: now.data.lookAt.z,
+//               },
+//               4000
+//             )
+//             .easing(TWEEN.Easing.Cubic.Out)
+//             .start();
 
-          // change camera position
-          new TWEEN.Tween(camera.position)
-            .to(
-              {
-                // x: now.data.camPos.x,
-                // y: now.data.camPos.y,
-                z: now.data.camPos.z,
-              },
-              4000
-            )
-            .easing(TWEEN.Easing.Cubic.Out)
-            .start();
-        }}
-      />
-      <FontAwesomeIcon icon={faAnglesLeft} className="icon-left" />
-    </Html>
-  );
-}
+//           // change camera position
+//           new TWEEN.Tween(camera.position)
+//             .to(
+//               {
+//                 // x: now.data.camPos.x,
+//                 // y: now.data.camPos.y,
+//                 z: now.data.camPos.z,
+//               },
+//               4000
+//             )
+//             .easing(TWEEN.Easing.Cubic.Out)
+//             .start();
+//         }}
+//       />
+//       <FontAwesomeIcon icon={faAnglesLeft} className="icon-left" />
+//     </Html>
+//   );
+// }
 
 //Tween component to update
 function Tween() {
@@ -183,18 +189,73 @@ function Tween() {
 
 function App() {
   const ref = useRef();
+  const controls = useRef();
+  const camera = useRef();
+  let now = list.head;
+  const forward = () => {
+    now = now.next;
+  };
+
+  const buttons = (
+    <button
+      onClick={forward}
+      onPointerUp={() => {
+        // change target
+        console.log(controls.current.target);
+        console.log(now.data.lookAt.z);
+        console.log("momomoo");
+        new TWEEN.Tween(controls.current.target)
+          .to(
+            {
+              // x: now.data.lookAt.x,
+              // y: now.data.lookAt.y,
+              z: now.data.lookAt.z,
+            },
+            4000
+          )
+          .easing(TWEEN.Easing.Cubic.Out)
+          .start();
+
+        // change camera position
+        console.log(camera);
+        console.log(now.data.camPos.z);
+        new TWEEN.Tween(camera.current.position)
+          .to(
+            {
+              // x: now.data.camPos.x,
+              // y: now.data.camPos.y,
+              z: now.data.camPos.z,
+            },
+            4000
+          )
+          .easing(TWEEN.Easing.Cubic.Out)
+          .start();
+      }}
+    >
+      forward
+    </button>
+  );
   return (
     <div className="wrapper">
-      <Canvas camera={{ fov: 60, position: [0, 2, -25] }}>
+      {/* <Canvas camera={{ fov: 60, position: [0, 2, -25] }}> */}
+      <Canvas>
+        <PerspectiveCamera ref={camera} makeDefault position={[0, 2, -25]} />
         <Suspense fallback={null}>
-          <OrbitControls ref={ref} enableZoom={!false} target={[0, 0, 0]} />
+          <OrbitControls
+            ref={controls}
+            enableZoom={!false}
+            target={[0, 0, 0]}
+          />
           <ambientLight intensity={0.3} castShadow />
           <Museum rotation={[0, 0, 0]} />
           <axesHelper args={[10]} />
-          <Annotations controls={ref} />
+          {/* <Annotations controls={ref} /> */}
+          {/* <camMov controls={ref} /> */}
           <Tween />
         </Suspense>
       </Canvas>
+      {/* <div className="content"></div> */}
+      <div id="ui">{buttons}</div>
     </div>
   );
 }
