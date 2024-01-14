@@ -15,7 +15,7 @@ import { faAnglesRight, faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
 
 const marks = [
   {
-    title: "Computer Screen",
+    title: "A",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -34,7 +34,7 @@ const marks = [
     },
   },
   {
-    title: "Computer Screen",
+    title: "B",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -53,7 +53,7 @@ const marks = [
     },
   },
   {
-    title: "Computer Screen",
+    title: "C",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -69,6 +69,25 @@ const marks = [
       x: 0,
       y: 2,
       z: 30,
+    },
+  },
+  {
+    title: "Home",
+    description: "Alcher-related display image!",
+    camPos: {
+      x: 0,
+      y: 2,
+      z: -25,
+    },
+    lookAt: {
+      x: 0,
+      y: 2,
+      z: 0,
+    },
+    buttonAt: {
+      x: 0,
+      y: 2,
+      z: 0,
     },
   },
 ];
@@ -98,7 +117,8 @@ class CircularDoublyLinkedList {
     } else {
       // Connect the new node to the tail and update the tail
       newNode.prev = this.tail;
-      newNode.next = this.head; // Circular connection
+      newNode.next = this.head;
+      // Circular connection
       this.tail.next = newNode;
       this.tail = newNode;
     }
@@ -109,7 +129,7 @@ class CircularDoublyLinkedList {
     let current = this.head;
 
     if (!current) {
-      console.log("Circular Doubly Linked List is empty");
+      // console.log("Circular Doubly Linked List is empty");
       return;
     }
 
@@ -126,6 +146,9 @@ const list = new CircularDoublyLinkedList();
 marks.forEach((obj) => {
   list.append(obj);
 });
+list.head.prev = list.tail;
+list.tail.next = list.head;
+
 console.log(list);
 
 //a component creating a button as of now!
@@ -191,49 +214,96 @@ function App() {
   const ref = useRef();
   const controls = useRef();
   const camera = useRef();
-  let now = list.head;
+  let [now, setNow] = useState(list.head);
   const forward = () => {
-    now = now.next;
+    console.log(now.next);
+    setNow(now.next);
   };
+  const backward = () => {
+    console.log(now.prev);
+    setNow(now.prev);
+  };
+  useEffect(() => {
+    console.log("rendering...");
+  }, [now]);
 
   const buttons = (
-    <button
-      onClick={forward}
-      onPointerUp={() => {
-        // change target
-        console.log(controls.current.target);
-        console.log(now.data.lookAt.z);
-        console.log("momomoo");
-        new TWEEN.Tween(controls.current.target)
-          .to(
-            {
-              // x: now.data.lookAt.x,
-              // y: now.data.lookAt.y,
-              z: now.data.lookAt.z,
-            },
-            4000
-          )
-          .easing(TWEEN.Easing.Cubic.Out)
-          .start();
+    <>
+      <button
+        onClick={() => {
+          forward();
+          // change target
+          // console.log(controls.current.target);
+          // console.log(now.data.lookAt.z);
+          // console.log("momomoo");
+          new TWEEN.Tween(controls.current.target)
+            .to(
+              {
+                x: now.data.lookAt.x,
+                y: now.data.lookAt.y,
+                z: now.data.lookAt.z,
+              },
+              3000
+            )
+            .easing(TWEEN.Easing.Cubic.Out)
+            .start();
 
-        // change camera position
-        console.log(camera);
-        console.log(now.data.camPos.z);
-        new TWEEN.Tween(camera.current.position)
-          .to(
-            {
-              // x: now.data.camPos.x,
-              // y: now.data.camPos.y,
-              z: now.data.camPos.z,
-            },
-            4000
-          )
-          .easing(TWEEN.Easing.Cubic.Out)
-          .start();
-      }}
-    >
-      forward
-    </button>
+          // change camera position
+          // console.log(camera);
+          // console.log(now.data.camPos.z);
+          new TWEEN.Tween(camera.current.position)
+            .to(
+              {
+                // x: now.data.camPos.x,
+                // y: now.data.camPos.y,
+                z: now.data.camPos.z,
+              },
+              3000
+            )
+            .easing(TWEEN.Easing.Cubic.Out)
+            .start();
+        }}
+      >
+        forward
+      </button>
+      <button
+        onClick={() => {
+          backward();
+          // change target
+          // console.log(controls.current.target);
+          // console.log(now.data.lookAt.z);
+          // console.log("momomoo");
+          new TWEEN.Tween(controls.current.target)
+            .to(
+              {
+                x: now.data.lookAt.x,
+                y: now.data.lookAt.y,
+                z: now.data.lookAt.z,
+              },
+              3000
+            )
+            .easing(TWEEN.Easing.Cubic.Out)
+            .start();
+
+          // change camera position
+          // console.log(camera);
+          // console.log(now.data.camPos.z);
+          new TWEEN.Tween(camera.current.position)
+            .to(
+              {
+                // x: now.data.camPos.x,
+                // y: now.data.camPos.y,
+                z: now.data.camPos.z,
+              },
+              3000
+            )
+            .easing(TWEEN.Easing.Cubic.Out)
+            .start();
+        }}
+      >
+        backward
+      </button>
+    </>
   );
   return (
     <div className="wrapper">
