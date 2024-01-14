@@ -15,63 +15,6 @@ import { faAnglesRight, faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
 
 const marks = [
   {
-    title: "A",
-    description: "Alcher-related display image!",
-    camPos: {
-      x: 0,
-      y: 2,
-      z: -5,
-    },
-    lookAt: {
-      x: 0,
-      y: 2,
-      z: 0,
-    },
-    buttonAt: {
-      x: 0,
-      y: 2,
-      z: 0,
-    },
-  },
-  {
-    title: "B",
-    description: "Alcher-related display image!",
-    camPos: {
-      x: 0,
-      y: 2,
-      z: 10,
-    },
-    lookAt: {
-      x: 0,
-      y: 2,
-      z: 15,
-    },
-    buttonAt: {
-      x: 0,
-      y: 2,
-      z: 15,
-    },
-  },
-  {
-    title: "C",
-    description: "Alcher-related display image!",
-    camPos: {
-      x: 0,
-      y: 2,
-      z: 25,
-    },
-    lookAt: {
-      x: 0,
-      y: 2,
-      z: 30,
-    },
-    buttonAt: {
-      x: 0,
-      y: 2,
-      z: 30,
-    },
-  },
-  {
     title: "Home",
     description: "Alcher-related display image!",
     camPos: {
@@ -90,6 +33,64 @@ const marks = [
       z: 0,
     },
   },
+  {
+    title: "First-Room",
+    description: "Alcher-related display image!",
+    camPos: {
+      x: 0,
+      y: 2,
+      z: -5,
+    },
+    lookAt: {
+      x: 0,
+      y: 2,
+      z: 0,
+    },
+    buttonAt: {
+      x: 0,
+      y: 2,
+      z: 0,
+    },
+  },
+  {
+    title: "Second-Room",
+    description: "Alcher-related display image!",
+    camPos: {
+      x: 0,
+      y: 2,
+      z: 10,
+    },
+    lookAt: {
+      x: 0,
+      y: 2,
+      z: 15,
+    },
+    buttonAt: {
+      x: 0,
+      y: 2,
+      z: 15,
+    },
+  },
+  {
+    title: "Third-Room",
+    description: "Alcher-related display image!",
+    camPos: {
+      x: 0,
+      y: 2,
+      z: 25,
+    },
+    lookAt: {
+      x: 0,
+      y: 2,
+      z: 30,
+    },
+    buttonAt: {
+      x: 0,
+      y: 2,
+      z: 30,
+    },
+  },
+  
 ];
 
 class Node {
@@ -149,59 +150,8 @@ marks.forEach((obj) => {
 list.head.prev = list.tail;
 list.tail.next = list.head;
 
-console.log(list);
 
-//a component creating a button as of now!
-// function Annotations({ controls }) {
-//   const { camera } = useThree();
-//   let now = list.head;
 
-//   const forward = () => {
-//     now = now.next;
-//   };
-
-//   useEffect(() => {
-//     console.log("rendering...");
-//   }, [now]);
-
-//   return (
-//     <Html className="hello" fullscreen>
-//       <FontAwesomeIcon
-//         className="icon-right"
-//         icon={faAnglesRight}
-//         onClick={forward}
-//         onPointerUp={() => {
-//           // change target
-//           new TWEEN.Tween(controls.current.target)
-//             .to(
-//               {
-//                 // x: now.data.lookAt.x,
-//                 // y: now.data.lookAt.y,
-//                 z: now.data.lookAt.z,
-//               },
-//               4000
-//             )
-//             .easing(TWEEN.Easing.Cubic.Out)
-//             .start();
-
-//           // change camera position
-//           new TWEEN.Tween(camera.position)
-//             .to(
-//               {
-//                 // x: now.data.camPos.x,
-//                 // y: now.data.camPos.y,
-//                 z: now.data.camPos.z,
-//               },
-//               4000
-//             )
-//             .easing(TWEEN.Easing.Cubic.Out)
-//             .start();
-//         }}
-//       />
-//       <FontAwesomeIcon icon={faAnglesLeft} className="icon-left" />
-//     </Html>
-//   );
-// }
 
 //Tween component to update
 function Tween() {
@@ -214,54 +164,71 @@ function App() {
   const ref = useRef();
   const controls = useRef();
   const camera = useRef();
+
   let [now, setNow] = useState(list.head);
+ 
   const forward = () => {
-    console.log(now.next);
-    setNow(now.next);
+    setNow((prevNow) => {
+      console.log("next-node->", prevNow.next);
+      return prevNow.next;
+      
+    });
   };
+  
+
+
   const backward = () => {
-    console.log(now.prev);
+    console.log("prev-node->",now.prev);
     setNow(now.prev);
   };
-  useEffect(() => {
-    console.log("rendering...");
-  }, [now]);
+
+
+  //this is the changes i have made!
+  useEffect(()=>{
+    console.log("where is my node->",now);
+     // Perform other actions that depend on the updated state here
+     if(controls.current){
+      new TWEEN.Tween(controls.current.target)
+      .to(
+        {
+          x: now.data.lookAt.x,
+          y: now.data.lookAt.y,
+          z: now.data.lookAt.z,
+        },
+        3000
+      )
+      .easing(TWEEN.Easing.Cubic.Out)
+      .start();
+
+    // change camera position
+    // console.log(camera);
+    // console.log(now.data.camPos.z);
+    new TWEEN.Tween(camera.current.position)
+      .to(
+        {
+          // x: now.data.camPos.x,
+          // y: now.data.camPos.y,
+          z: now.data.camPos.z,
+        },
+        3000
+      )
+      .easing(TWEEN.Easing.Cubic.Out)
+      .start();
+     }
+     
+  },[now]);
 
   const buttons = (
-    <>
+    <React.Fragment>
       <button
         onClick={() => {
           forward();
+          console.log("After-forward",now);
           // change target
           // console.log(controls.current.target);
           // console.log(now.data.lookAt.z);
           // console.log("momomoo");
-          new TWEEN.Tween(controls.current.target)
-            .to(
-              {
-                x: now.data.lookAt.x,
-                y: now.data.lookAt.y,
-                z: now.data.lookAt.z,
-              },
-              3000
-            )
-            .easing(TWEEN.Easing.Cubic.Out)
-            .start();
-
-          // change camera position
-          // console.log(camera);
-          // console.log(now.data.camPos.z);
-          new TWEEN.Tween(camera.current.position)
-            .to(
-              {
-                // x: now.data.camPos.x,
-                // y: now.data.camPos.y,
-                z: now.data.camPos.z,
-              },
-              3000
-            )
-            .easing(TWEEN.Easing.Cubic.Out)
-            .start();
+          
         }}
       >
         forward
@@ -269,41 +236,17 @@ function App() {
       <button
         onClick={() => {
           backward();
+          console.log(now);
           // change target
           // console.log(controls.current.target);
           // console.log(now.data.lookAt.z);
           // console.log("momomoo");
-          new TWEEN.Tween(controls.current.target)
-            .to(
-              {
-                x: now.data.lookAt.x,
-                y: now.data.lookAt.y,
-                z: now.data.lookAt.z,
-              },
-              3000
-            )
-            .easing(TWEEN.Easing.Cubic.Out)
-            .start();
-
-          // change camera position
-          // console.log(camera);
-          // console.log(now.data.camPos.z);
-          new TWEEN.Tween(camera.current.position)
-            .to(
-              {
-                // x: now.data.camPos.x,
-                // y: now.data.camPos.y,
-                z: now.data.camPos.z,
-              },
-              3000
-            )
-            .easing(TWEEN.Easing.Cubic.Out)
-            .start();
+         
         }}
       >
         backward
       </button>
-    </>
+    </React.Fragment>
   );
   return (
     <div className="wrapper">
