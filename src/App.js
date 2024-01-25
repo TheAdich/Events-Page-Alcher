@@ -4,6 +4,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Museum } from "./gltfFiles/Museum_new";
 import TWEEN from "@tweenjs/tween.js";
+import { Model_Museum } from "./gltfFiles/Museum_woTextures";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faAnglesRight, faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -181,7 +182,7 @@ function App() {
             target={[0, 0, 0]}
           />
           <ambientLight intensity={0.3} castShadow />
-          <Museum rotation={[0, 0, 0]} />
+          <Model_Museum rotation={[0, 0, 0]} />
           <axesHelper args={[10]} />
           <Tween />
         </Suspense>
