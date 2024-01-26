@@ -10,6 +10,8 @@ import * as THREE from 'three';
 
 export function Model_Museum(props) {
   const texture=useTexture(BakedFile);
+  texture.flipY=false;
+  texture.encoding=THREE.sRGBEncoding;
   const textureMaterial=new THREE.MeshStandardMaterial({
     map:texture,
   })

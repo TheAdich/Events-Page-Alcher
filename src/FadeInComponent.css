@@ -1,0 +1,21 @@
+.fade-in {
+  opacity: 1;
+  /*transition: opacity 1000ms ease-in-out;*/
+}
+
+.fade-in.animating {
+   /* Set the initial opacity for the animation */
+  animation: fadein-animation 1000ms ease-in-out;
+}
+
+@keyframes fadein-animation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

@@ -5,12 +5,14 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Museum } from "./gltfFiles/Museum_new";
 import TWEEN from "@tweenjs/tween.js";
 import { Model_Museum } from "./gltfFiles/Museum_woTextures";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faAnglesRight, faAnglesLeft } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import './FadeInComponent.css';
 
 const marks = [
   {
-    title: "Home",
+    title2: "last-room",
+    title1: "room-1",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -24,7 +26,8 @@ const marks = [
     },
   },
   {
-    title: "First-Room",
+    title2: "room-1",
+    title1: "room-2",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -38,7 +41,8 @@ const marks = [
     },
   },
   {
-    title: "Second-Room",
+    title2: "room-2",
+    title1: "room-3",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -52,7 +56,8 @@ const marks = [
     },
   },
   {
-    title: "Third-Room",
+    title2: "room-3",
+    title1: "Home",
     description: "Alcher-related display image!",
     camPos: {
       x: 0,
@@ -110,24 +115,72 @@ function Tween() {
   });
 }
 
+
+
+
 function App() {
+
+  const [isAnimating, setIsAnimating] = useState(false);
+  const [title1, setTitle1] = useState(list.head.data.title1);
+  const [title2, setTitle2] = useState(list.head.data.title2);
   const controls = useRef();
   const camera = useRef();
-
   let [now, setNow] = useState(list.head);
 
+
+
+
   const forward = () => {
+    setIsAnimating(true);
+
+    // Reset the animation after a delay (duration of your animation)
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1000);
     setNow((prevNow) => {
+      const updateDelay=500;
+      setTimeout(()=>{
+        setTitle1(prevNow.next.data.title1);
+      setTitle2(prevNow.next.data.title2);
+      },updateDelay)
       return prevNow.next;
     });
   };
 
   const backward = () => {
+    setIsAnimating(true);
+
+    // Reset the animation after a delay (duration of your animation)
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1000);
+
+    const updateDelay=500;
+    setTimeout(()=>{
+      setTitle1(now.prev.data.title1);
+    setTitle2(now.prev.data.title2);
+    },updateDelay)
     setNow(now.prev);
   };
 
+  const backToHome = () => {
+    setIsAnimating(true);
+
+    // Reset the animation after a delay (duration of your animation)
+    setTimeout(() => {
+      setIsAnimating(false);
+    }, 1000);
+
+    const updateDelay=500;
+    setTimeout(()=>{
+      setTitle1(list.head.data.title1);
+    setTitle2(list.head.data.title2);
+    },updateDelay);
+    
+    setNow(list.head);
+  }
+
   useEffect(() => {
-    console.log("where is my node->", now);
     if (controls.current) {
       new TWEEN.Tween(controls.current.target)
         .to(
@@ -155,20 +208,39 @@ function App() {
 
   const buttons = (
     <React.Fragment>
-      <button
-        onClick={() => {
-          forward();
-        }}
-      >
-        forward
+      <span className="forward-container">
+        <button className="btn btn-forward"
+          onClick={() => {
+            forward();
+          }}
+        >
+          <span className={`fade-in ${isAnimating ? 'animating' : ''}`} >{title1}
+          </span>
+        </button>
+
+
+        <FontAwesomeIcon icon={faArrowRight} className="forward-svg" />
+      </span>
+
+      <span className="backward-container">
+        <FontAwesomeIcon icon={faArrowLeft} className="backward-svg" />
+        <button className="btn btn-backward"
+          onClick={() => {
+            backward();
+          }}
+        >
+          <span className={`fade-in ${isAnimating ? 'animating' : ''}`} >{title2}
+          </span>
+        </button>
+      </span>
+
+      <button className="back-to-home" onClick={() => {
+        backToHome();
+      }}>
+        Back to home
       </button>
-      <button
-        onClick={() => {
-          backward();
-        }}
-      >
-        backward
-      </button>
+
+
     </React.Fragment>
   );
   return (
@@ -181,7 +253,7 @@ function App() {
             enableZoom={!false}
             target={[0, 0, 0]}
           />
-          <ambientLight intensity={0.3} castShadow />
+          <ambientLight intensity={1} castShadow />
           <Model_Museum rotation={[0, 0, 0]} />
           <axesHelper args={[10]} />
           <Tween />
