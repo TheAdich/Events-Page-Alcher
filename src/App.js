@@ -2,11 +2,12 @@ import "./App.css";
 import React, { useRef, useState, useEffect, Suspense } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
-import { Museum } from "./gltfFiles/Museum_new";
+//import { Museum } from "./gltfFiles/Museum_new";
 import TWEEN from "@tweenjs/tween.js";
-import { Model_Museum } from "./gltfFiles/Museum_woTextures";
+//import { Model_Museum } from "./gltfFiles/Museum_woTextures";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { Museum } from "./gltfFiles/Museum_FinalExport1";
 import './FadeInComponent.css';
 
 const marks = [
@@ -138,11 +139,11 @@ function App() {
       setIsAnimating(false);
     }, 1000);
     setNow((prevNow) => {
-      const updateDelay=500;
-      setTimeout(()=>{
+      const updateDelay = 500;
+      setTimeout(() => {
         setTitle1(prevNow.next.data.title1);
-      setTitle2(prevNow.next.data.title2);
-      },updateDelay)
+        setTitle2(prevNow.next.data.title2);
+      }, updateDelay)
       return prevNow.next;
     });
   };
@@ -155,11 +156,11 @@ function App() {
       setIsAnimating(false);
     }, 1000);
 
-    const updateDelay=500;
-    setTimeout(()=>{
+    const updateDelay = 500;
+    setTimeout(() => {
       setTitle1(now.prev.data.title1);
-    setTitle2(now.prev.data.title2);
-    },updateDelay)
+      setTitle2(now.prev.data.title2);
+    }, updateDelay)
     setNow(now.prev);
   };
 
@@ -171,12 +172,12 @@ function App() {
       setIsAnimating(false);
     }, 1000);
 
-    const updateDelay=500;
-    setTimeout(()=>{
+    const updateDelay = 500;
+    setTimeout(() => {
       setTitle1(list.head.data.title1);
-    setTitle2(list.head.data.title2);
-    },updateDelay);
-    
+      setTitle2(list.head.data.title2);
+    }, updateDelay);
+
     setNow(list.head);
   }
 
@@ -246,18 +247,19 @@ function App() {
   return (
     <div className="wrapper">
       <Canvas>
+        <ambientLight intensity={1}></ambientLight>
         <PerspectiveCamera ref={camera} makeDefault position={[0, 2, -25]} />
-        <Suspense fallback={null}>
-          <OrbitControls
-            ref={controls}
-            enableZoom={!false}
-            target={[0, 0, 0]}
-          />
-          <ambientLight intensity={1} castShadow />
-          <Model_Museum rotation={[0, 0, 0]} />
-          <axesHelper args={[10]} />
-          <Tween />
-        </Suspense>
+
+        <OrbitControls
+          ref={controls}
+          enableZoom={false}
+          target={[0, 0, 0]}
+        />
+        <ambientLight intensity={1} castShadow />
+        <Museum rotation={[0, 0, 0]} />
+        <axesHelper args={[10]} />
+        <Tween />
+
       </Canvas>
       <div id="ui">{buttons}</div>
     </div>
